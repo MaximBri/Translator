@@ -20,56 +20,70 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
   const { changeLanguage, switchLanguages, sourceLang, targetLang } = data
 
   return (
-    <div className='flex items-center space-x-2'>
-      <Select
-        value={sourceLang}
-        onValueChange={(value) => changeLanguage(value, false)}
-      >
-        <SelectTrigger className='w-[150px]'>
-          <SelectValue placeholder='Исходный язык' />
-        </SelectTrigger>
-        <SelectContent>
-          {languages.map((lang) => (
-            <SelectItem key={lang.code} value={lang.code}>
-              <div className='flex justify-between items-center w-full gap-2'>
-                <img
-                  src={`/languages/${lang.code}.svg`}
-                  alt={`${lang.name} icon`}
-                  className='h-5 w-6'
-                />
-                {lang.name}
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className='flex justify-between items-center'>
+      <div className='flex'>
+        <Select
+          value={sourceLang}
+          onValueChange={(value) => changeLanguage(value, false)}
+        >
+          <SelectTrigger className='w-[150px]'>
+            <SelectValue placeholder='Исходный язык' />
+          </SelectTrigger>
+          <SelectContent>
+            {languages.map((lang) => (
+              <SelectItem key={lang.code} value={lang.code}>
+                <div className='flex justify-between items-center w-full gap-2'>
+                  <img
+                    src={`/languages/${lang.code}.svg`}
+                    alt={`${lang.name} icon`}
+                    className='h-5 w-6'
+                  />
+                  {lang.name}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      <Button variant='outline' size='icon' onClick={switchLanguages}>
-        ⇄
-      </Button>
+        <Button variant='outline' size='icon' onClick={switchLanguages}>
+          ⇄
+        </Button>
 
-      <Select
-        value={targetLang}
-        onValueChange={(value) => changeLanguage(value, true)}
-      >
-        <SelectTrigger className='w-[150px]'>
-          <SelectValue placeholder='Целевой язык' />
-        </SelectTrigger>
-        <SelectContent>
-          {languages.map((lang) => (
-            <SelectItem key={lang.code} value={lang.code}>
-              <div className='flex justify-between items-center w-full gap-2'>
-                <img
-                  src={`/languages/${lang.code}.svg`}
-                  alt={`${lang.name} icon`}
-                  className='h-5 w-5'
-                />
-                {lang.name}
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <Select
+          value={targetLang}
+          onValueChange={(value) => changeLanguage(value, true)}
+        >
+          <SelectTrigger className='w-[150px]'>
+            <SelectValue placeholder='Целевой язык' />
+          </SelectTrigger>
+          <SelectContent>
+            {languages.map((lang) => (
+              <SelectItem key={lang.code} value={lang.code}>
+                <div className='flex justify-between items-center w-full gap-2'>
+                  <img
+                    src={`/languages/${lang.code}.svg`}
+                    alt={`${lang.name} icon`}
+                    className='h-5 w-5'
+                  />
+                  {lang.name}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex">
+        <Button variant='outline' size='icon'>
+          🔊
+        </Button>
+        <Button variant='outline' size='icon'>
+          ⏸️
+        </Button>
+        <Button variant='outline' size='icon'>
+          ⏹️
+        </Button>
+      </div>
     </div>
   )
 }
