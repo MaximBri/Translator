@@ -19,6 +19,10 @@ export const HomePage = () => {
     changeLanguage,
     handleTranslate,
     handleSwitchLanguages,
+    speechStatus,
+    startSpeech,
+    pauseSpeech,
+    stopSpeech
   } = data
 
   return (
@@ -36,6 +40,10 @@ export const HomePage = () => {
           switchLanguages={handleSwitchLanguages}
           sourceLang={sourceLang}
           targetLang={targetLang}
+          speechStatus={speechStatus}
+          startSpeech={startSpeech}
+          pauseSpeech={pauseSpeech}
+          stopSpeech={stopSpeech}
         />
         <Textarea
           placeholder='Введите текст'
