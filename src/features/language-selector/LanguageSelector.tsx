@@ -14,10 +14,14 @@ interface LanguageSelectorProps {
   targetLang: string
   switchLanguages: () => void
   changeLanguage: (newValue: string, isTargetLanguage: boolean) => void
+  speechStatus: string
+  startSpeech: () => void
+  pauseSpeech: () => void
+  stopSpeech: () => void
 }
 
 export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
-  const { changeLanguage, switchLanguages, sourceLang, targetLang } = data
+  const { changeLanguage, switchLanguages, sourceLang, targetLang, speechStatus, startSpeech, pauseSpeech, stopSpeech } = data
 
   return (
     <div className='flex justify-between items-center'>
@@ -74,15 +78,14 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
       </div>
 
       <div className="flex">
-        <Button variant='outline' size='icon'>
-          🔊
-        </Button>
-        <Button variant='outline' size='icon'>
-          ⏸️
-        </Button>
-        <Button variant='outline' size='icon'>
-          ⏹️
-        </Button>
+        {
+          speechStatus !== "started"
+          ?
+          <Button variant='outline' size='icon' onClick={startSpeech}>🔊</Button>
+          :
+          <Button variant='outline' size='icon' onClick={pauseSpeech}>⏸️</Button>
+        }
+        <Button variant='outline' size='icon' onClick={stopSpeech}>⏹️</Button>
       </div>
     </div>
   )
