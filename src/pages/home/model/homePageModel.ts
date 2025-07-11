@@ -11,6 +11,8 @@ export const useHomePageModel = () => {
   const [text, setText] = useState<string>('')
   const [sourceLang, setSourceLang] = useState<string>(languages[0].code)
   const [targetLang, setTargetLang] = useState<string>(languages[1].code)
+  const [copiedInput, setCopiedInput] = useState<boolean>(false)
+  const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
 
   const handleSwitchLanguages = () => {
     const temp = sourceLang
@@ -30,6 +32,18 @@ export const useHomePageModel = () => {
     }
   }
 
+  const handleCopyInput = () => {
+    navigator.clipboard.writeText(text)
+    setCopiedInput(true)
+    setTimeout(() => setCopiedInput(false), 3000)
+  }
+
+  const handleCopyOutput = () => {
+    navigator.clipboard.writeText(translatedText)
+    setCopiedOutput(true)
+    setTimeout(() => setCopiedOutput(false), 3000)
+  }
+
   return {
     text,
     error,
@@ -37,8 +51,12 @@ export const useHomePageModel = () => {
     isLoading,
     sourceLang,
     targetLang,
+    copiedInput,
+    copiedOutput,
     changeLanguage,
+    handleCopyInput,
     handleTranslate,
+    handleCopyOutput,
     handleSwitchLanguages,
     translated: translatedText,
     speechStatus,
