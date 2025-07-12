@@ -38,7 +38,7 @@ export const HomePage = () => {
           />
           {text && (
             <button
-              className='absolute bottom-1 right-1 p-1'
+              className='absolute bottom-1 right-1 p-1 z-10'
               onClick={handleCopyInput}
               aria-label='Копировать текст'
             >

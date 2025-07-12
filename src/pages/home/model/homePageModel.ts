@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { languages } from '@/shared/config/languages'
 import { useTranslator } from '@/shared/hooks/useTranslator'
 
@@ -60,24 +60,6 @@ export const useHomePageModel = () => {
       }
     }
   }
-
-  const clearSelection = () => {
-    const text = window.getSelection()?.toString().trim() || ''
-
-    if (!text) {
-      setSelection('')
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('mouseup', clearSelection)
-    document.addEventListener('keyup', clearSelection)
-
-    return () => {
-      document.removeEventListener('mouseup', clearSelection)
-      document.removeEventListener('keyup', clearSelection)
-    }
-  }, [])
 
   return {
     text,
