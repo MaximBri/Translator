@@ -1,20 +1,27 @@
 import { useRef, useState } from 'react'
 import { languages } from '@/shared/config/languages'
 import { useTranslator } from '@/shared/hooks/useTranslator'
+import { useSpeech } from 'react-text-to-speech'
 
 export const useHomePageModel = () => {
   const translator = useTranslator()
   const { isLoading, error, translatedText, getTranslate } = translator
-  
+  const {
+    speechStatus,
+    start: startSpeech,
+    pause: pauseSpeech,
+    stop: stopSpeech,
+  } = useSpeech({ text: translatedText })
+
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  
+
   const [text, setText] = useState<string>('')
   const [sourceLang, setSourceLang] = useState<string>(languages[0].code)
   const [targetLang, setTargetLang] = useState<string>(languages[1].code)
   const [copiedInput, setCopiedInput] = useState<boolean>(false)
   const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
   const [selection, setSelection] = useState<string>('')
-  
+
   const handleSwitchLanguages = () => {
     const temp = sourceLang
     setSourceLang(targetLang)
@@ -78,6 +85,10 @@ export const useHomePageModel = () => {
     handleSwitchLanguages,
     translated: translatedText,
     selection,
-    textareaRef
+    textareaRef,
+    speechStatus,
+    startSpeech,
+    pauseSpeech,
+    stopSpeech,
   }
 }
