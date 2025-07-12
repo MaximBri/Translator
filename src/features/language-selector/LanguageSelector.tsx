@@ -17,10 +17,7 @@ interface LanguageSelectorProps {
   targetLang: string
   switchLanguages: () => void
   changeLanguage: (newValue: string, isTargetLanguage: boolean) => void
-  speechStatus: string
-  startSpeech: () => void
-  pauseSpeech: () => void
-  stopSpeech: () => void
+  translatedText: string
 }
 
 export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
