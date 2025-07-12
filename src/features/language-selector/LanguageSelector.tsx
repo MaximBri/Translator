@@ -1,4 +1,5 @@
 import { type FC } from 'react'
+import { useSpeech } from 'react-text-to-speech'
 import { languages } from '@/shared/config/languages'
 import {
   Select,
@@ -14,17 +15,15 @@ interface LanguageSelectorProps {
   targetLang: string
   switchLanguages: () => void
   changeLanguage: (newValue: string, isTargetLanguage: boolean) => void
-  speechStatus: string
-  startSpeech: () => void
-  pauseSpeech: () => void
-  stopSpeech: () => void
+  translatedText: string
 }
 
 export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
-  const { changeLanguage, switchLanguages, sourceLang, targetLang, speechStatus, startSpeech, pauseSpeech, stopSpeech } = data
-
+  const { changeLanguage, switchLanguages, sourceLang, targetLang, translatedText } = data
+  const { speechStatus, start: startSpeech, pause: pauseSpeech, stop: stopSpeech } = useSpeech({ text: translatedText })
+  
   return (
-    <div className='flex justify-between items-center'>
+    <div className='flex justify-between items-center mb-5'>
       <div className='flex'>
         <Select
           value={sourceLang}
