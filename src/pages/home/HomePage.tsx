@@ -70,7 +70,11 @@ export const HomePage = () => {
             </button>
           )}
         </div>
-        <Button onClick={handleTranslate} disabled={isLoading}>
+        <Button
+          variant='outline'
+          onClick={handleTranslate}
+          disabled={isLoading}
+        >
           {isLoading ? (
             <Loader2 className='h-4 w-4 animate-spin' />
           ) : (
@@ -78,6 +82,33 @@ export const HomePage = () => {
           )}
         </Button>
         {isLoading ? (
+          <Skeleton className='h-20 rounded-md' />
+        ) : (
+          <div
+            className='
+        relative mt-4 pb-6 p-4 border rounded min-h-[80px]
+        bg-gray-50 text-gray-900 border-gray-200
+        dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700
+        transition-colors duration-200
+      '
+          >
+            {translated || 'Здесь будет перевод'}
+            {translated && (
+              <button
+                className='absolute bottom-0 right-0 p-1 cursor-pointer'
+                onClick={handleCopyOutput}
+                aria-label='Скопировать перевод'
+              >
+                {copiedOutput ? (
+                  <Check className='h-5 w-5 text-green-500' />
+                ) : (
+                  <Copy className='h-5 w-5' />
+                )}
+              </button>
+            )}
+          </div>
+        )}
+        {/* {isLoading ? (
           <Skeleton className='h-20 rounded-md' />
         ) : (
           <div className='relative mt-4 pb-6 p-4 border rounded bg-gray-50 min-h-[80px]'>
@@ -96,7 +127,7 @@ export const HomePage = () => {
               </button>
             )}
           </div>
-        )}
+        )} */}
       </div>
     </>
   )

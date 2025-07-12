@@ -8,6 +8,9 @@ import {
   SelectValue,
 } from '@/shared/ui/select'
 import { Button } from '@/shared/ui/button'
+import { useNavigate } from 'react-router-dom'
+import { Settings } from 'lucide-react'
+import { LANG_DISPLAY } from '@/shared/config/localStorageKeys'
 
 interface LanguageSelectorProps {
   sourceLang: string
@@ -21,11 +24,23 @@ interface LanguageSelectorProps {
 }
 
 export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
-  const { changeLanguage, switchLanguages, sourceLang, targetLang, speechStatus, startSpeech, pauseSpeech, stopSpeech } = data
+  const navigate = useNavigate()
+  const {
+    changeLanguage,
+    switchLanguages,
+    sourceLang,
+    targetLang,
+    speechStatus,
+    startSpeech,
+    pauseSpeech,
+    stopSpeech,
+  } = data
+
+  const langDisplay = localStorage.getItem(LANG_DISPLAY)
 
   return (
     <div className='flex justify-between items-center'>
-      <div className='flex'>
+      <div className='flex gap-2'>
         <Select
           value={sourceLang}
           onValueChange={(value) => changeLanguage(value, false)}
@@ -37,12 +52,14 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
             {languages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
                 <div className='flex justify-between items-center w-full gap-2'>
-                  <img
-                    src={`/languages/${lang.code}.svg`}
-                    alt={`${lang.name} icon`}
-                    className='h-5 w-6'
-                  />
-                  {lang.name}
+                  {langDisplay !== 'name-only' && (
+                    <img
+                      src={`/languages/${lang.code}.svg`}
+                      alt={`${lang.name} icon`}
+                      className='h-5 w-5'
+                    />
+                  )}
+                  {langDisplay !== 'flag-only' && lang.name}
                 </div>
               </SelectItem>
             ))}
@@ -64,28 +81,42 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
             {languages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
                 <div className='flex justify-between items-center w-full gap-2'>
-                  <img
-                    src={`/languages/${lang.code}.svg`}
-                    alt={`${lang.name} icon`}
-                    className='h-5 w-5'
-                  />
-                  {lang.name}
+                  {langDisplay !== 'name-only' && (
+                    <img
+                      src={`/languages/${lang.code}.svg`}
+                      alt={`${lang.name} icon`}
+                      className='h-5 w-5'
+                    />
+                  )}
+                  {langDisplay !== 'flag-only' && lang.name}
                 </div>
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+        <Button
+          variant='outline'
+          size='icon'
+          onClick={() => navigate('/settings')}
+          aria-label='Settings'
+        >
+          <Settings className='h-5 w-5' />
+        </Button>
       </div>
 
-      <div className="flex">
-        {
-          speechStatus !== "started"
-          ?
-          <Button variant='outline' size='icon' onClick={startSpeech}>🔊</Button>
-          :
-          <Button variant='outline' size='icon' onClick={pauseSpeech}>⏸️</Button>
-        }
-        <Button variant='outline' size='icon' onClick={stopSpeech}>⏹️</Button>
+      <div className='flex gap-2'>
+        {speechStatus !== 'started' ? (
+          <Button variant='outline' size='icon' onClick={startSpeech}>
+            🔊
+          </Button>
+        ) : (
+          <Button variant='outline' size='icon' onClick={pauseSpeech}>
+            ⏸️
+          </Button>
+        )}
+        <Button variant='outline' size='icon' onClick={stopSpeech}>
+          ⏹️
+        </Button>
       </div>
     </div>
   )
