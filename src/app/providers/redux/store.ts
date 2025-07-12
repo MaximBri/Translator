@@ -1,10 +1,14 @@
+import { historyReducer } from '@/features/translate-history/redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 
-const rootReducer = combineReducers({})
+const rootReducer = combineReducers({
+	translationHistory: historyReducer,
+})
 
 export const store = configureStore({
 	reducer: rootReducer,
+
 	middleware(getDefaultMiddleware) {
 		return getDefaultMiddleware().concat([])
 	},
