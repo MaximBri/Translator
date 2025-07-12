@@ -21,7 +21,7 @@ export const useHomePageModel = () => {
   const [copiedInput, setCopiedInput] = useState<boolean>(false)
   const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
   const [selection, setSelection] = useState<string>('')
-
+  
   const handleSwitchLanguages = () => {
     const temp = sourceLang
     setSourceLang(targetLang)
