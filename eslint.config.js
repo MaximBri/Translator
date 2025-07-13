@@ -28,6 +28,7 @@ export default tseslint.config([
           allowTaggedTemplates: false,
         },
       ],
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])
