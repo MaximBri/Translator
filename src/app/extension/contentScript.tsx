@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { type FC } from 'react'
-import DraggableTooltip from '@/shared/ui/draggableTooltip'
+import { DraggableTooltip } from '@/features/draggable-tooltip'
 
 let popupRoot: HTMLDivElement | null = null
 
