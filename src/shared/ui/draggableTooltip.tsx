@@ -1,6 +1,8 @@
-import { useEffect, useRef } from 'react'
 import Draggable from 'react-draggable'
+import { useAppSelector } from '@/app/providers/redux/hooks'
 import { Check, Copy, Loader2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+
 import { useHomePageModel } from '@/pages/home/model/homePageModel'
 import { useTranslator } from '../hooks/useTranslator'
 import { LanguageSelector } from '@/features/language-selector'
@@ -10,17 +12,26 @@ interface DraggableTooltipProps {
 }
 
 const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
-  const draggableTooltipRef = useRef(null)
-  const data = useHomePageModel()
+  const sourceLang = useAppSelector(
+    (state) => state.languagesControl.sourceLanguage
+  )
+  const targetLang = useAppSelector(
+    (state) => state.languagesControl.targetLanguage
+  )
+
   const translator = useTranslator()
-  const {
-    sourceLang,
-    targetLang,
-    copiedInput,
-    changeLanguage,
-    handleSwitchLanguages,
-  } = data
+  const { changeLanguage, handleSwitchLanguages } = useHomePageModel()
   const { isLoading, error, translatedText, getTranslate } = translator
+
+  const draggableTooltipRef = useRef(null)
+
+  const [isCopied, setIsCopied] = useState<boolean>(false)
+
+  const handleCopyOutput = () => {
+    navigator.clipboard.writeText(translatedText)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 3000)
+  }
 
   useEffect(() => {
     getTranslate(text, sourceLang, targetLang)
@@ -57,11 +68,13 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
             <span>{translatedText}</span>
           )}
 
-          {copiedInput ? (
-            <Check className='h-5 w-5 text-green-500' />
-          ) : (
-            <Copy className='h-5 w-5' />
-          )}
+          <button>
+            {isCopied ? (
+              <Check className='h-5 w-5 text-green-500' />
+            ) : (
+              <Copy onClick={handleCopyOutput} className='h-5 w-5' />
+            )}
+          </button>
         </div>
       </div>
     </Draggable>

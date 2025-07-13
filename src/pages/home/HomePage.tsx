@@ -1,7 +1,9 @@
+import { Check, Copy } from 'lucide-react'
+
 import { Textarea } from '@/shared/ui/textarea'
 import { useHomePageModel } from './model/homePageModel'
+import { TranslationHistoryPopover } from '@/features/translate-history/ui'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/alert'
-import { Check, Copy } from 'lucide-react'
 import DraggableTootlip from '@/shared/ui/draggableTooltip'
 
 export const HomePage = () => {
@@ -14,7 +16,7 @@ export const HomePage = () => {
     handleCopyInput,
     handleTextSelect,
     selection,
-    textareaRef
+    textareaRef,
   } = data
 
   return (
@@ -27,7 +29,16 @@ export const HomePage = () => {
       )}
       <div className='max-w-xl mx-auto mt-20 p-4 space-y-4'>
         <div className='relative'>
-          {selection && <DraggableTootlip text={selection} />}
+          {selection && (
+            <DraggableTootlip
+              text={selection}
+            />
+          )}
+
+          <div className='flex justify-end my-2'>
+            <TranslationHistoryPopover />
+          </div>
+
           <Textarea
             ref={textareaRef}
             className='pb-8'

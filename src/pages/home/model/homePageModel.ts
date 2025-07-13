@@ -1,35 +1,63 @@
-import { useRef, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/app/providers/redux/hooks'
+import {
+  setSourceLanguage,
+  setTargetLanguage,
+  switchLanguages,
+} from '@/entities/languages/redux/slice'
 import { languages } from '@/shared/config/languages'
+import { useDetectLanguage } from '@/shared/hooks/useDetectLanguage'
 import { useTranslator } from '@/shared/hooks/useTranslator'
+import { useRef, useState } from 'react'
 
 export const useHomePageModel = () => {
+  const dispatch = useAppDispatch()
   const translator = useTranslator()
+  const { detect } = useDetectLanguage()
+
   const { isLoading, error, translatedText, getTranslate } = translator
 
+  const sourceLang = useAppSelector(
+    (state) => state.languagesControl.sourceLanguage
+  )
+  const targetLang = useAppSelector(
+    (state) => state.languagesControl.targetLanguage
+  )
+  
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [text, setText] = useState<string>('')
-  const [sourceLang, setSourceLang] = useState<string>(languages[0].code)
-  const [targetLang, setTargetLang] = useState<string>(languages[1].code)
   const [copiedInput, setCopiedInput] = useState<boolean>(false)
-  const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
   const [selection, setSelection] = useState<string>('')
-  
+
+  const getFallbackTargetLang = (source: string): string => {
+    const fallback = languages.find((lang) => lang.code !== source)
+    return fallback?.code ?? 'en'
+  }
+
   const handleSwitchLanguages = () => {
-    const temp = sourceLang
-    setSourceLang(targetLang)
-    setTargetLang(temp)
+    dispatch(switchLanguages())
   }
 
   const handleTranslate = () => {
-    getTranslate(text, sourceLang, targetLang)
+    const detectedLanguage = detect(text)
+
+    dispatch(setSourceLanguage(detectedLanguage))
+
+    if (detectedLanguage === targetLang) {
+      const fallbackTarget = getFallbackTargetLang(detectedLanguage)
+      dispatch(setTargetLanguage(fallbackTarget))
+    }
+
+    getTranslate(text, detectedLanguage, targetLang)
   }
 
   const changeLanguage = (code: string, isTarget: boolean) => {
     if (sourceLang === code || targetLang === code) {
-      handleSwitchLanguages()
+      dispatch(switchLanguages())
     } else {
-      isTarget ? setTargetLang(code) : setSourceLang(code)
+      isTarget
+        ? dispatch(setTargetLanguage(code))
+        : dispatch(setSourceLanguage(code))
     }
   }
 
@@ -37,12 +65,6 @@ export const useHomePageModel = () => {
     navigator.clipboard.writeText(text)
     setCopiedInput(true)
     setTimeout(() => setCopiedInput(false), 3000)
-  }
-
-  const handleCopyOutput = () => {
-    navigator.clipboard.writeText(translatedText)
-    setCopiedOutput(true)
-    setTimeout(() => setCopiedOutput(false), 3000)
   }
 
   const handleTextSelect = () => {
@@ -54,6 +76,14 @@ export const useHomePageModel = () => {
       const selectedText = textarea.value.substring(start, end).trim()
 
       if (selectedText) {
+        const detectedLanguage = detect(selectedText)
+        dispatch(setSourceLanguage(detectedLanguage))
+
+        if (detectedLanguage === targetLang) {
+          const fallbackTarget = getFallbackTargetLang(detectedLanguage)
+          dispatch(setTargetLanguage(fallbackTarget))
+        }
+
         setSelection(selectedText)
       } else {
         setSelection('')
@@ -66,15 +96,11 @@ export const useHomePageModel = () => {
     error,
     setText,
     isLoading,
-    sourceLang,
-    targetLang,
     copiedInput,
-    copiedOutput,
     changeLanguage,
     handleCopyInput,
     handleTranslate,
     handleTextSelect,
-    handleCopyOutput,
     handleSwitchLanguages,
     translated: translatedText,
     selection,
