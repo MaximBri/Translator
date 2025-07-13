@@ -67,12 +67,7 @@ export const AppSettings: FC<AppSettingsProps> = (data) => {
           </SelectContent>
         </Select>
 
-        <Button
-          variant='outline'
-          size='icon'
-          onClick={switchLanguages}
-          className='rotate-90 sm:rotate-0'
-        >
+        <Button variant='outline' size='icon' onClick={switchLanguages} className='rotate-90 sm:rotate-0'>
           ⇄
         </Button>
 

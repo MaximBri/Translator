@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Translator Extension",
+  "version": "1.0.0",
+  "description": "Быстрый переводчик прямо в браузере",
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-32.png",
+    "128": "icon-96.png"
+  },
+  "action": {
+    "default_popup": "src/app/extension/popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-32.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/app/extension/background.ts"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/app/extension/contentScript.tsx"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab", "scripting"]
+}
