@@ -9,20 +9,16 @@ import {
 } from '@/shared/ui/select'
 import { Button } from '@/shared/ui/button'
 import { useNavigate } from 'react-router-dom'
+import { useSpeech } from 'react-text-to-speech'
 import { Settings } from 'lucide-react'
 import { LANG_DISPLAY } from '@/shared/config/localStorageKeys'
-import type { SpeechStatus } from 'react-text-to-speech/types'
 
 interface LanguageSelectorProps {
+  changeLanguage: (newValue: string, isTargetLanguage: boolean) => void
+  switchLanguages: () => void
   sourceLang: string
   targetLang: string
-  switchLanguages: () => void
-  changeLanguage: (newValue: string, isTargetLanguage: boolean) => void
   translatedText: string
-  speechStatus: SpeechStatus
-  startSpeech: () => void
-  pauseSpeech: () => void
-  stopSpeech: () => void
 }
 
 export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
@@ -32,12 +28,14 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
     switchLanguages,
     sourceLang,
     targetLang,
-    speechStatus,
-    startSpeech,
-    pauseSpeech,
-    stopSpeech,
+    translatedText,
   } = data
-
+  const {
+    speechStatus,
+    start: startSpeech,
+    pause: pauseSpeech,
+    stop: stopSpeech,
+  } = useSpeech({ text: translatedText })
   const langDisplay = localStorage.getItem(LANG_DISPLAY)
 
   return (

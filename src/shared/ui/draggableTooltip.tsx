@@ -19,10 +19,6 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
     copiedInput,
     changeLanguage,
     handleSwitchLanguages,
-    pauseSpeech,
-    speechStatus,
-    startSpeech,
-    stopSpeech,
   } = data
   const { isLoading, error, translatedText, getTranslate } = translator
 
@@ -51,10 +47,6 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
           sourceLang={sourceLang}
           targetLang={targetLang}
           translatedText={translatedText}
-          pauseSpeech={pauseSpeech}
-          speechStatus={speechStatus}
-          startSpeech={startSpeech}
-          stopSpeech={stopSpeech}
         />
         <div className='flex justify-between items-center mt-4'>
           {isLoading ? (
