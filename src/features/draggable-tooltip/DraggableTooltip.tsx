@@ -4,14 +4,14 @@ import { Check, Copy, Loader2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useHomePageModel } from '@/pages/home/model/homePageModel'
-import { useTranslator } from '../hooks/useTranslator'
-import { LanguageSelector } from '@/features/language-selector'
+import { useTranslator } from '../../shared/hooks/useTranslator'
+import { AppSettings } from '@/features/app-settings'
 
 interface DraggableTooltipProps {
   text: string
 }
 
-const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
+export const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
   const sourceLang = useAppSelector(
     (state) => state.languagesControl.sourceLanguage
   )
@@ -52,7 +52,7 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
         `}
       >
         <h1 className='text-3xl font-bold mb-5 text-center'>Translator</h1>
-        <LanguageSelector
+        <AppSettings
           changeLanguage={changeLanguage}
           switchLanguages={handleSwitchLanguages}
           sourceLang={sourceLang}
@@ -80,5 +80,3 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
     </Draggable>
   )
 }
-
-export default DraggableTooltip

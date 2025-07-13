@@ -22,7 +22,7 @@ export const useHomePageModel = () => {
   const targetLang = useAppSelector(
     (state) => state.languagesControl.targetLanguage
   )
-  
+
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [text, setText] = useState<string>('')
@@ -40,6 +40,7 @@ export const useHomePageModel = () => {
 
   const handleTranslate = () => {
     const detectedLanguage = detect(text)
+    console.log(detectedLanguage)
 
     dispatch(setSourceLanguage(detectedLanguage))
 
@@ -77,6 +78,7 @@ export const useHomePageModel = () => {
 
       if (selectedText) {
         const detectedLanguage = detect(selectedText)
+        console.log(detectedLanguage)
         dispatch(setSourceLanguage(detectedLanguage))
 
         if (detectedLanguage === targetLang) {
