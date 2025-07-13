@@ -1,94 +1,130 @@
-import { useRef, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '@/app/providers/redux/hooks'
+import {
+	setSourceLanguage,
+	setTargetLanguage,
+	switchLanguages,
+} from '@/entities/languages/redux/slice'
 import { languages } from '@/shared/config/languages'
+import { useDetectLanguage } from '@/shared/hooks/useDetectLanguage'
 import { useTranslator } from '@/shared/hooks/useTranslator'
+import { useRef, useState } from 'react'
 import { useSpeech } from 'react-text-to-speech'
 
 export const useHomePageModel = () => {
-  const translator = useTranslator()
-  const { isLoading, error, translatedText, getTranslate } = translator
-  const {
-    speechStatus,
-    start: startSpeech,
-    pause: pauseSpeech,
-    stop: stopSpeech,
-  } = useSpeech({ text: translatedText })
+	const dispatch = useAppDispatch()
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+	const translator = useTranslator()
+	const { detect } = useDetectLanguage()
 
-  const [text, setText] = useState<string>('')
-  const [sourceLang, setSourceLang] = useState<string>(languages[0].code)
-  const [targetLang, setTargetLang] = useState<string>(languages[1].code)
-  const [copiedInput, setCopiedInput] = useState<boolean>(false)
-  const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
-  const [selection, setSelection] = useState<string>('')
-  
-  const handleSwitchLanguages = () => {
-    const temp = sourceLang
-    setSourceLang(targetLang)
-    setTargetLang(temp)
-  }
+	const { isLoading, error, translatedText, getTranslate } = translator
+	const {
+		speechStatus,
+		start: startSpeech,
+		pause: pauseSpeech,
+		stop: stopSpeech,
+	} = useSpeech({ text: translatedText })
 
-  const handleTranslate = () => {
-    getTranslate(text, sourceLang, targetLang)
-  }
+	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const changeLanguage = (code: string, isTarget: boolean) => {
-    if (sourceLang === code || targetLang === code) {
-      handleSwitchLanguages()
-    } else {
-      isTarget ? setTargetLang(code) : setSourceLang(code)
-    }
-  }
+	const sourceLang = useAppSelector(
+		state => state.languagesControl.sourceLanguage
+	)
+	const targetLang = useAppSelector(
+		state => state.languagesControl.targetLanguage
+	)
 
-  const handleCopyInput = () => {
-    navigator.clipboard.writeText(text)
-    setCopiedInput(true)
-    setTimeout(() => setCopiedInput(false), 3000)
-  }
+	const [text, setText] = useState<string>('')
+	const [copiedInput, setCopiedInput] = useState<boolean>(false)
+	const [copiedOutput, setCopiedOutput] = useState<boolean>(false)
+	const [selection, setSelection] = useState<string>('')
 
-  const handleCopyOutput = () => {
-    navigator.clipboard.writeText(translatedText)
-    setCopiedOutput(true)
-    setTimeout(() => setCopiedOutput(false), 3000)
-  }
+	const getFallbackTargetLang = (source: string): string => {
+		const fallback = languages.find(lang => lang.code !== source)
+		return fallback?.code ?? 'en'
+	}
 
-  const handleTextSelect = () => {
-    const textarea = textareaRef.current
+	const handleSwitchLanguages = () => {
+		dispatch(switchLanguages())
+	}
 
-    if (textarea) {
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      const selectedText = textarea.value.substring(start, end).trim()
+	const handleTranslate = () => {
+		const detectedLanguage = detect(text)
 
-      if (selectedText) {
-        setSelection(selectedText)
-      } else {
-        setSelection('')
-      }
-    }
-  }
+		dispatch(setSourceLanguage(detectedLanguage))
 
-  return {
-    text,
-    error,
-    setText,
-    isLoading,
-    sourceLang,
-    targetLang,
-    copiedInput,
-    copiedOutput,
-    changeLanguage,
-    handleCopyInput,
-    handleTranslate,
-    handleTextSelect,
-    handleCopyOutput,
-    handleSwitchLanguages,
-    translated: translatedText,
-    selection,
-    textareaRef,
-    speechStatus,
-    startSpeech,
-    pauseSpeech,
-    stopSpeech,
-  }
+		if (detectedLanguage === targetLang) {
+			const fallbackTarget = getFallbackTargetLang(detectedLanguage)
+			dispatch(setTargetLanguage(fallbackTarget))
+		}
+
+		getTranslate(text, detectedLanguage, targetLang)
+	}
+
+	const changeLanguage = (code: string, isTarget: boolean) => {
+		if (sourceLang === code || targetLang === code) {
+			dispatch(switchLanguages())
+		} else {
+			isTarget
+				? dispatch(setTargetLanguage(code))
+				: dispatch(setSourceLanguage(code))
+		}
+	}
+
+	const handleCopyInput = () => {
+		navigator.clipboard.writeText(text)
+		setCopiedInput(true)
+		setTimeout(() => setCopiedInput(false), 3000)
+	}
+
+	const handleCopyOutput = () => {
+		navigator.clipboard.writeText(translatedText)
+		setCopiedOutput(true)
+		setTimeout(() => setCopiedOutput(false), 3000)
+	}
+
+	const handleTextSelect = () => {
+		const textarea = textareaRef.current
+
+		if (textarea) {
+			const start = textarea.selectionStart
+			const end = textarea.selectionEnd
+			const selectedText = textarea.value.substring(start, end).trim()
+
+			if (selectedText) {
+				const detectedLanguage = detect(selectedText)
+				dispatch(setSourceLanguage(detectedLanguage))
+
+				if (detectedLanguage === targetLang) {
+					const fallbackTarget = getFallbackTargetLang(detectedLanguage)
+					dispatch(setTargetLanguage(fallbackTarget))
+				}
+
+				setSelection(selectedText)
+			} else {
+				setSelection('')
+			}
+		}
+	}
+
+	return {
+		text,
+		error,
+		setText,
+		isLoading,
+		copiedInput,
+		copiedOutput,
+		changeLanguage,
+		handleCopyInput,
+		handleTranslate,
+		handleTextSelect,
+		handleCopyOutput,
+		handleSwitchLanguages,
+		translated: translatedText,
+		selection,
+		textareaRef,
+		speechStatus,
+		startSpeech,
+		pauseSpeech,
+		stopSpeech,
+	}
 }

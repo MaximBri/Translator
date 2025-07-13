@@ -1,9 +1,11 @@
+import { languagesControlReducer } from '@/entities/languages/redux'
 import { historyReducer } from '@/features/translate-history/redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
 	translationHistory: historyReducer,
+	languagesControl: languagesControlReducer,
 })
 
 export const store = configureStore({
