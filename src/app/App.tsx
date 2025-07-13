@@ -3,12 +3,17 @@ import { ErrorBoundary } from './providers'
 import { SettingsPage } from '@/pages/settings'
 import { useTheme } from '@/shared/hooks/useTheme'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import type { FC } from 'react'
 
-const App = () => {
+interface AppProps {
+  basename?: string
+}
+
+const App: FC<AppProps> = ({ basename }) => {
   useTheme()
   return (
     <ErrorBoundary>
-      <BrowserRouter basename='/src/app/extension/popup.html'>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route index element={<HomePage />} />
           <Route path='/settings' element={<SettingsPage />} />
