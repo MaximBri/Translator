@@ -51,11 +51,11 @@ const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
     <Draggable
       nodeRef={draggableTooltipRef}
       defaultPosition={{ x: 0, y: 300 }}
-      bounds={{ top: -50, left: -600, right: 600, bottom: 600 }}
+      bounds='parent'
     >
       <div
         ref={draggableTooltipRef}
-        className={`
+        className={`max-w-xl
             relative p-5 z-20 bg-white text-gray-900 border-2 border-solid
             border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700
             transition-colors duration-200

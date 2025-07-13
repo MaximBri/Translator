@@ -41,10 +41,9 @@ export const HomePage = () => {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+      {selection && <DraggableTootlip text={selection} />}
       <div className='max-w-xl mx-auto mt-20 p-4 space-y-4'>
         <div className='relative'>
-          {selection && <DraggableTootlip text={selection} />}
-
           <div className='flex justify-between my-2'>
             <Select
               value={sourceLang}
