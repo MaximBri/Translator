@@ -1,11 +1,12 @@
 import Draggable from 'react-draggable'
-import { useAppSelector } from '@/app/providers/redux/hooks'
 import { Check, Copy, Loader2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useHomePageModel } from '@/pages/home/model/homePageModel'
-import { useTranslator } from '../../shared/hooks/useTranslator'
+import { useTranslator } from '@/shared/hooks/useTranslator'
 import { AppSettings } from '@/features/app-settings'
+import { useAppSelector } from '@/app/providers/redux/hooks'
+import { useDetectLanguage } from '@/shared/hooks/useDetectLanguage'
 
 interface DraggableTooltipProps {
   text: string
@@ -19,8 +20,10 @@ export const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
     (state) => state.languagesControl.targetLanguage
   )
 
+  const data = useHomePageModel()
   const translator = useTranslator()
-  const { changeLanguage, handleSwitchLanguages } = useHomePageModel()
+  const { detect } = useDetectLanguage()
+  const { changeLanguage, handleSwitchLanguages } = data
   const { isLoading, error, translatedText, getTranslate } = translator
 
   const draggableTooltipRef = useRef(null)
@@ -34,21 +37,29 @@ export const DraggableTooltip = ({ text }: DraggableTooltipProps) => {
   }
 
   useEffect(() => {
-    getTranslate(text, sourceLang, targetLang)
+    const source = detect(text)
+    if (source === sourceLang) {
+      getTranslate(text, sourceLang, targetLang)
+    } else if (source === targetLang) {
+      getTranslate(text, targetLang, sourceLang)
+      handleSwitchLanguages()
+    } else {
+      getTranslate(text, source, targetLang)
+    }
   }, [text, sourceLang, targetLang])
 
   return (
     <Draggable
       nodeRef={draggableTooltipRef}
-      defaultPosition={{ x: 0, y: 300 }}
-      bounds={{ top: -50, left: -600, right: 600, bottom: 600 }}
+      defaultPosition={{ x: 300, y: 300 }}
+      bounds='parent'
     >
       <div
         ref={draggableTooltipRef}
         className={`
             relative p-5 z-20 bg-white text-gray-900 border-2 border-solid
             border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700
-            transition-colors duration-200
+            transition-colors duration-200 max-w-xl
         `}
       >
         <h1 className='text-3xl font-bold mb-5 text-center'>Translator</h1>
