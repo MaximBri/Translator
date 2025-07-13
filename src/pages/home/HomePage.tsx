@@ -25,7 +25,7 @@ export const HomePage = () => {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      <div className='max-w-xl mx-auto mt-20 p-4 space-y-4'>
+      <div className='max-w-xl mx-auto h-min p-4 space-y-4'>
         <div className='relative'>
           {selection && <DraggableTootlip text={selection} />}
           <Textarea

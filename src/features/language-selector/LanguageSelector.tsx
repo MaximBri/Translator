@@ -41,19 +41,19 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
   const langDisplay = localStorage.getItem(LANG_DISPLAY)
 
   return (
-    <div className='flex justify-between items-center'>
-      <div className='flex gap-2'>
+    <div className='flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center'>
+      <div className='flex flex-col gap-2 items-center sm:flex-row sm:flex-nowrap sm:items-center'>
         <Select
           value={sourceLang}
           onValueChange={(value) => changeLanguage(value, false)}
         >
-          <SelectTrigger className='w-[150px]'>
+          <SelectTrigger className='min-w-[180px]'>
             <SelectValue placeholder='Исходный язык' />
           </SelectTrigger>
           <SelectContent>
             {languages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
-                <div className='flex justify-between items-center w-full gap-2'>
+                <div className='flex items-center gap-2 w-full'>
                   {langDisplay !== 'name-only' && (
                     <img
                       src={`/languages/${lang.code}.svg`}
@@ -68,7 +68,7 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
           </SelectContent>
         </Select>
 
-        <Button variant='outline' size='icon' onClick={switchLanguages}>
+        <Button variant='outline' size='icon' onClick={switchLanguages} className='rotate-90 sm:rotate-0'>
           ⇄
         </Button>
 
@@ -76,13 +76,13 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
           value={targetLang}
           onValueChange={(value) => changeLanguage(value, true)}
         >
-          <SelectTrigger className='w-[150px]'>
+          <SelectTrigger className='min-w-[180px]'>
             <SelectValue placeholder='Целевой язык' />
           </SelectTrigger>
           <SelectContent>
             {languages.map((lang) => (
               <SelectItem key={lang.code} value={lang.code}>
-                <div className='flex justify-between items-center w-full gap-2'>
+                <div className='flex items-center gap-2 w-full'>
                   {langDisplay !== 'name-only' && (
                     <img
                       src={`/languages/${lang.code}.svg`}
@@ -96,6 +96,23 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className='flex gap-2 flex-wrap sm:flex-nowrap justify-between w-full'>
+        <div className='flex gap-2'>
+          {speechStatus !== 'started' ? (
+            <Button variant='outline' size='icon' onClick={startSpeech}>
+              🔊
+            </Button>
+          ) : (
+            <Button variant='outline' size='icon' onClick={pauseSpeech}>
+              ⏸️
+            </Button>
+          )}
+          <Button variant='outline' size='icon' onClick={stopSpeech}>
+            ⏹️
+          </Button>
+        </div>
         <Button
           variant='outline'
           size='icon'
@@ -103,21 +120,6 @@ export const LanguageSelector: FC<LanguageSelectorProps> = (data) => {
           aria-label='Settings'
         >
           <Settings className='h-5 w-5' />
-        </Button>
-      </div>
-
-      <div className='flex gap-2'>
-        {speechStatus !== 'started' ? (
-          <Button variant='outline' size='icon' onClick={startSpeech}>
-            🔊
-          </Button>
-        ) : (
-          <Button variant='outline' size='icon' onClick={pauseSpeech}>
-            ⏸️
-          </Button>
-        )}
-        <Button variant='outline' size='icon' onClick={stopSpeech}>
-          ⏹️
         </Button>
       </div>
     </div>
