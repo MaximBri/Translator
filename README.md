@@ -1,69 +1,31 @@
-# React + TypeScript + Vite
+<h1>Плагин переводчик</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Стек:
+ - React
+ - React Router v6
+ - TypeScript
+ - Redux Toolkit
+ - Shadcn UI
+ - Vite
+ - FSD
 
-Currently, two official plugins are available:
+Реализовано приложение, на странице которого располагается текст с возможностью смены языка для него. При выделении текста появляется tooltip поверх контента на странице, внутри которого отображается перевод выделенного текста. В tooltip присутствует возможность выбора, с какого языка и на какой язык осуществляется перевод.<br>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Перевод текста осуществлен с помощью LibreTranslate API: https://github.com/LibreTranslate/LibreTranslate?tab=readme-ov-file.<br>
 
-## Expanding the ESLint configuration
+Реализация tooltip осуществлена с помощью библиотеки react-draggable: https://www.npmjs.com/package/react-draggable. При реализации учтено, что выделение может произойти в любой части экрана, tooltip не выходит за его пределы.<br>
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Реализация озвучивания текста осуществлена с помощью библиотеки react-text-to-speech: https://www.npmjs.com/package/react-text-to-speech.<br>
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Использован менеджер состояния Redux Toolkit для работы с языками.<br>
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Для стилизации использована библиотека компонентов Shadcn UI: https://ui.shadcn.com/.<br>
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+В ходе реализации приложения решены следующие задачи:
+ 1. Создан tooltip, появляющийся при выделении текста (Алексей Ушаков, Максим Брызгалов).
+ 2. Реализована возможность озвучивания текста (Алексей Ушаков).
+ 3. Реализовано сохранение истории переводов (Айдар Арзыбеков).
+ 4. Реализована возможность копирования вставленного текста и переведенного (Максим Брызгалов).
+ 5. Реализовано автоопределение языка для выделенного текста (Айдар Арзыбеков).
+ 6. Реализована конвертация приложения в расширение (Максим Брызгалов).
+ 7. Добавлены настройки для приложения (Максим Брызгалов).
