@@ -8,7 +8,7 @@ const App = () => {
   useTheme()
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter basename='/src/app/extension/popup.html'>
         <Routes>
           <Route index element={<HomePage />} />
           <Route path='/settings' element={<SettingsPage />} />
